@@ -1,0 +1,22 @@
+# Site Configuration
+site:
+  domain: "https://reaction-lab.netlify.app"
+  title: "Reaction Lab - Aspire Coding Academy"
+  description: "Challenge your reflexes with three client-side mini games built with HTML, CSS, and JavaScript. Build projects like this at Aspire Coding Academy."
+
+# Google Tag Manager
+gtm:
+  container_id: "GTM-XXXXXXX"
+
+# Asset Paths
+assets:
+  logo: "/assets/logo/white_logo_text_svg.svg"
+  og_image: "/assets/images/preview_navy.png"
+  favicons:
+    ico: "/assets/favicons/favicon.ico"
+    svg: "/assets/favicons/favicon.svg"
+    png_96: "/assets/favicons/favicon-96x96.png"
+    apple_touch: "/assets/favicons/apple-touch-icon.png"
+    manifest_192: "/assets/favicons/web-app-manifest-192x192.png"
+    manifest_512: "/assets/favicons/web-app-manifest-512x512.png"
+    webmanifest: "/assets/favicons/site.webmanifest"

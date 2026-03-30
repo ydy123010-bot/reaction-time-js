@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reaction Lab - Aspire Coding Academy</title>
+    <meta name="description" content="Try three fast-paced reaction games built with HTML, CSS, and JavaScript. Explore stoplight, color-match, and whack-a-pixel challenges inspired by projects students build at Aspire Coding Academy.">
+    <meta name="keywords" content="reaction time game, javascript game, coding for kids, learn to code, aspire coding academy, stroop test, whack a mole">
+    <meta name="author" content="Aspire Coding Academy">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reaction-lab.netlify.app/">
+    <meta property="og:title" content="Reaction Lab - Aspire Coding Academy">
+    <meta property="og:description" content="Challenge your reflexes with three client-side mini games built with HTML, CSS, and JavaScript.">
+    <meta property="og:image" content="https://reaction-lab.netlify.app/assets/images/preview_navy.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://reaction-lab.netlify.app/">
+    <meta property="twitter:title" content="Reaction Lab - Aspire Coding Academy">
+    <meta property="twitter:description" content="Challenge your reflexes with three client-side mini games built with HTML, CSS, and JavaScript.">
+    <meta property="twitter:image" content="https://reaction-lab.netlify.app/assets/images/preview_navy.png">
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicons/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicons/favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicons/site.webmanifest">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="clock.css">
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="page-glow"></div>
+
+    <div class="app-shell">
+        <header class="hero">
+            <a class="brand" href="https://aspirecodingacademy.com" target="_blank" rel="noreferrer">
+                <img src="/assets/logo/white_logo_text_svg.svg" alt="Aspire Coding Academy Logo" class="logo">
+            </a>
+
+            <h1>
+                <span class="loader"></span>
+                <span>Reaction Lab</span>
+                <span class="loader"></span>
+            </h1>
+            <p class="intro">
+                Test your reaction time
+            </p>
+        </header>
+
+        <main class="main-content">
+            <section class="test-selection" id="test-selection">
+                <div class="mode-list">
+                    <button class="mode-button" id="mode-stoplight" type="button" data-mode="stoplight">
+                        <span class="mode-name">Stoplight</span>
+                        <span class="mode-copy">3 rounds. Wait for green, then click instantly.</span>
+                    </button>
+                    <button class="mode-button" id="mode-stroop" type="button" data-mode="stroop">
+                        <span class="mode-name">Color Match</span>
+                        <span class="mode-copy">Tap True or False based on whether the word matches its color.</span>
+                    </button>
+                    <button class="mode-button" id="mode-whack" type="button" data-mode="whack">
+                        <span class="mode-name">Whack a Pixel</span>
+                        <span class="mode-copy">Hit as many pixels as you can in 20 seconds.</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="game-area hidden" id="game-area">
+                <div class="arena" id="arena">
+                    <button class="reaction-panel idle" id="reaction-panel" type="button">
+                        <span class="panel-phase" id="panel-phase">Round 1</span>
+                        <span class="panel-instruction" id="panel-instruction">Wait for green, then click as fast as you can.</span>
+                    </button>
+
+                    <div class="stroop-panel hidden" id="stroop-panel">
+                        <p class="stroop-round" id="stroop-round">Question 1 of 10</p>
+                        <div class="stroop-word-wrap">
+                            <p class="stroop-word" id="stroop-word">RED</p>
+                        </div>
+                        <p class="stroop-instruction">Do the word and the text color match?</p>
+                        <div class="answer-buttons">
+                            <button class="answer-button true-button" id="true-button" type="button">True</button>
+                            <button class="answer-button false-button" id="false-button" type="button">False</button>
+                        </div>
+                    </div>
+
+                    <div class="whack-panel hidden" id="whack-panel">
+                        <div class="whack-topline">
+                            <div>
+                                <p class="mini-label">Time Left</p>
+                                <p class="mini-value" id="whack-timer">20.0s</p>
+                            </div>
+                            <div>
+                                <p class="mini-label">Hits</p>
+                                <p class="mini-value" id="whack-score">0</p>
+                            </div>
+                        </div>
+                        <div class="whack-board" id="whack-board">
+                            <button class="pixel hidden" id="pixel" type="button" aria-label="Target pixel"></button>
+                        </div>
+                        <p class="whack-helper">Click the glowing pixel. Misses freeze the current one for 1 second.</p>
+                    </div>
+                </div>
+
+                <div class="results-panel hidden" id="results-panel">
+                    <p class="results-label">Results</p>
+                    <h2 class="results-title" id="results-title">Test Complete</h2>
+                    <div class="results-summary" id="results-summary"></div>
+                    <div class="results-actions">
+                        <button class="primary-action" id="retry-button" type="button">Retry</button>
+                        <button class="secondary-action" id="different-test-button" type="button">Different Test</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>
+                This is one of the projects students can build at Aspire Coding Academy.
+                <a href="https://aspirecodingacademy.com/coding-class" target="_blank" rel="noreferrer">Learn more</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
