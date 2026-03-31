@@ -1,6 +1,6 @@
 :root {
     --bg: #07111f;
-    --card: rgba(8, 19, 34, 0.82);
+    --card: rgba(21, 40, 69, 0.82);
     --card-border: #8fe8ff;
     --text: #f5fbff;
     --muted: #9cb7d3;
@@ -27,6 +27,7 @@ body {
         radial-gradient(circle at top, rgba(91, 160, 255, 0.18), transparent 35%),
         linear-gradient(160deg, #08111e 0%, #112541 55%, #050c16 100%);
     padding: 60px 20px;
+    touch-action: manipulation;
 }
 
 button,
@@ -113,11 +114,10 @@ h1 {
     max-width: 800px;
     margin: 0 auto;
     background: var(--card);
-    border: 1px solid var(--card-border);
     border-radius: 8px;
     backdrop-filter: blur(20px);
     box-shadow: var(--shadow);
-    padding: 24px;
+    padding: 12px;
 }
 
 .mode-list {
@@ -133,6 +133,7 @@ h1 {
 
 .state-playing {
     min-height: 420px;
+    padding-bottom: 0;
 }
 
 .game-container {
@@ -149,8 +150,6 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .hud-content {

@@ -182,17 +182,17 @@ export function createWhackGame(root, { onComplete }) {
     let skillBadge = "Trainee";
     let reactionDescription = "You are reaching unc status";
 
-    if (hits >= 30) {
+    if (hits >= 25) {
       skillBadge = "Professional";
       reactionDescription = "You have elite reaction speed";
-    } else if (hits >= 25) {
+    } else if (hits >= 20) {
       skillBadge = "Eagle Eye";
       reactionDescription = "Sniped a lot of pixels!";
-    } else if (hits >= 18) {
+    } else if (hits >= 14) {
       skillBadge = "Marksman";
       reactionDescription =
         "You may not be a pro athlete, but you sure aren't an unc!";
-    } else if (hits >= 10) {
+    } else if (hits >= 9) {
       skillBadge = "Cadet";
       reactionDescription = "Good start, but you can do better.";
     } else {
