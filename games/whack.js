@@ -18,7 +18,7 @@ export function createWhackGame(root, { onComplete }) {
   let animationFrameId = null;
 
   // Constants
-  const GAME_DURATION = 15000; // 15 seconds
+  const GAME_DURATION = 10000; // 10 seconds
   const HITBOX_SIZE = 30;
   const MARGIN = 20;
   const SPAWN_DELAY = 250;
@@ -178,12 +178,27 @@ export function createWhackGame(root, { onComplete }) {
         ? hitTimes.reduce((sum, t) => sum + t, 0) / hitTimes.length
         : 0;
 
-    // Determine skill badge
+    // Determine skill badge and description pair based on hits (7 buckets)
     let skillBadge = "Trainee";
-    if (hits >= 15) skillBadge = "Eagle Eye";
-    else if (hits >= 12) skillBadge = "Sharpshooter";
-    else if (hits >= 9) skillBadge = "Marksman";
-    else if (hits >= 6) skillBadge = "Cadet";
+    let reactionDescription = "You are reaching unc status";
+
+    if (hits >= 30) {
+      skillBadge = "Professional";
+      reactionDescription = "You have elite reaction speed";
+    } else if (hits >= 25) {
+      skillBadge = "Eagle Eye";
+      reactionDescription = "Sniped a lot of pixels!";
+    } else if (hits >= 18) {
+      skillBadge = "Marksman";
+      reactionDescription =
+        "You may not be a pro athlete, but you sure aren't an unc!";
+    } else if (hits >= 10) {
+      skillBadge = "Cadet";
+      reactionDescription = "Good start, but you can do better.";
+    } else {
+      skillBadge = "Stormtrooper";
+      reactionDescription = "Gotta work on that aim!";
+    }
 
     // Pass data object to onComplete
     onComplete({
@@ -192,6 +207,7 @@ export function createWhackGame(root, { onComplete }) {
       accuracy,
       avgTime,
       skillBadge,
+      reactionDescription,
       hitTimes,
     });
   }

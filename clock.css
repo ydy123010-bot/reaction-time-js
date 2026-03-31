@@ -2,7 +2,7 @@
   position: relative;
   transform: scale(0.9);
   border-radius: 50%;
-  border: 1px solid;
+  border: 3px solid;
   width: 30px;
   height: 30px;
   color: white;
@@ -13,12 +13,12 @@
   width: 0px;
   height: 10px;
   display: block;
-  border-left: 1px solid #fff;
+  border-left: 2px solid #fff;
   content: '';
-  left: 14px;
-  border-radius: 1px;
-  top: 4px;
-  animation-duration: 1s;
+  left: 11.5px;
+  border-radius: 2px;
+  top: 2.5px;
+  animation-duration: 1.5s;
 }
 
 .loader::before {
@@ -26,12 +26,12 @@
   width: 0px;
   height: 10px;
   display: block;
-  border-left: 1px solid #fff;
+  border-left: 2px solid #fff;
   content: '';
-  left: 14px;
-  border-radius: 1px;
-  top: 4px;
-  animation-duration: 40s;
+  left: 11.5px;
+  border-radius: 2px;
+  top: 2.5px;
+  animation-duration: 30s;
 }
 
 .loader::before,.loader::after {

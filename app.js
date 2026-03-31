@@ -79,7 +79,7 @@ async function renderResults(data) {
 
 function populateStoplightResults(data) {
   document.getElementById("average-time").textContent = formatMilliseconds(data.average);
-  document.getElementById("reaction-age").textContent = `Reflexes of a ${data.reactionAge}-year-old`;
+  document.getElementById("reaction-description").textContent = `Top ${data.topPercent}% · ${data.reactionDescription}`;
 
   data.results.forEach((time, index) => {
     document.getElementById(`round-${index + 1}-time`).textContent = formatMilliseconds(time);
@@ -89,7 +89,7 @@ function populateStoplightResults(data) {
 function populateWhackResults(data) {
   // Hero stats
   document.getElementById("hit-count").textContent = data.hits;
-  document.getElementById("skill-badge").textContent = data.skillBadge;
+  document.getElementById("reaction-description").textContent = `${data.skillBadge} · ${data.reactionDescription}`;
 
   // Stats grid
   document.getElementById("accuracy").textContent = `${data.accuracy.toFixed(1)}%`;

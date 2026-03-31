@@ -43,6 +43,18 @@ export function createStoplightGame(root, { onComplete }) {
     }
   }
 
+  function calculateTopPercent(time) {
+    // Flipped formula to return "top X%" directly
+    // Lower time (faster) = lower top% (better)
+    const slope = 0.408333;
+    const intercept = -64.3333;
+
+    let topPercent = slope * time + intercept;
+
+    // Clamp the values between 1 and 99
+    return Math.round(Math.max(1, Math.min(99, topPercent)));
+  }
+
   function finishSeries() {
     cleanupTimers();
 
@@ -50,14 +62,24 @@ export function createStoplightGame(root, { onComplete }) {
       results.reduce((sum, time) => sum + time, 0) / results.length;
     const fastest = Math.min(...results);
     const slowest = Math.max(...results);
-    const reactionAge = Math.max(
-      15,
-      Math.min(75, Math.round(15 + (average - 200) / 5)),
-    );
+    const topPercent = calculateTopPercent(average);
+
+    // Determine reaction description based on average time (7 buckets)
+    let reactionDescription = "You are reaching unc status";
+    if (average < 170) reactionDescription = "You have elite reaction speed!";
+    else if (average < 200) reactionDescription = "Wow, impressive reflexes.";
+    else if (average < 250) reactionDescription = "Pretty good!";
+    else if (average < 300) reactionDescription = "Not too shabby.";
+    else if (average < 350)
+      reactionDescription = "Need a bit of practice, but you have potential.";
+    else
+      reactionDescription =
+        "Did you look away from the screen? Make sure not to click too early!";
 
     onComplete({
       average,
-      reactionAge,
+      topPercent,
+      reactionDescription,
       fastest,
       slowest,
       results,
@@ -68,7 +90,7 @@ export function createStoplightGame(root, { onComplete }) {
     state = "waiting";
     setPanel("waiting", `WAIT`, "");
 
-    const delay = 2500 + Math.random() * 1000;
+    const delay = 2000 + Math.random() * 1750;
     readyTimeoutId = window.setTimeout(() => {
       state = "ready";
       startTime = performance.now();
@@ -92,7 +114,11 @@ export function createStoplightGame(root, { onComplete }) {
       if (results.length === 3) {
         finishSeries();
       } else {
-        queueNextRound();
+        if (state === "early") {
+          queueCurrentRound(); // Retry same round
+        } else {
+          queueNextRound(); // Go to next round
+        }
       }
       return;
     }
@@ -100,8 +126,7 @@ export function createStoplightGame(root, { onComplete }) {
     if (state === "waiting") {
       cleanupTimers();
       state = "early";
-      setPanel("early", "TOO SOON!", "Tap to continue");
-      results.push(1000);
+      setPanel("early", "TOO SOON!", "Tap to retry");
       return;
     }
 
