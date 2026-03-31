@@ -200,16 +200,18 @@ export function createWhackGame(root, { onComplete }) {
       reactionDescription = "Gotta work on that aim!";
     }
 
-    // Pass data object to onComplete
-    onComplete({
-      hits,
-      misses,
-      accuracy,
-      avgTime,
-      skillBadge,
-      reactionDescription,
-      hitTimes,
-    });
+    // Add delay before showing results to prevent accidental clicks
+    setTimeout(() => {
+      onComplete({
+        hits,
+        misses,
+        accuracy,
+        avgTime,
+        skillBadge,
+        reactionDescription,
+        hitTimes,
+      });
+    }, 400);
   }
 
   function startGame() {
