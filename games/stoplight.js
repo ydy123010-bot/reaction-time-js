@@ -66,15 +66,18 @@ export function createStoplightGame(root, { onComplete }) {
 
     // Determine reaction description based on average time (7 buckets)
     let reactionDescription = "You are reaching unc status";
-    if (average < 170) reactionDescription = "You have elite reaction speed!";
-    else if (average < 200) reactionDescription = "Wow, impressive reflexes.";
-    else if (average < 250) reactionDescription = "Pretty good!";
-    else if (average < 300) reactionDescription = "Not too shabby.";
+    if (average < 180) reactionDescription = "You have elite reaction speed!";
+    else if (average < 200) reactionDescription = "Dang. That was crazy fast.";
+    else if (average < 225)
+      reactionDescription = "You might be on to something. That was fast.";
+    else if (average < 250)
+      reactionDescription = "Pretty good, try to get under 225ms.";
+    else if (average < 275)
+      reactionDescription = "Nice, this is an average reaction time.";
+    else if (average < 300) reactionDescription = "Well done, not too shabby.";
     else if (average < 350)
       reactionDescription = "Need a bit of practice, but you have potential.";
-    else
-      reactionDescription =
-        "Did you look away from the screen? Make sure not to click too early!";
+    else reactionDescription = "I think you can do better, try again!";
 
     onComplete({
       average,

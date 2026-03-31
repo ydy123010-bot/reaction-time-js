@@ -19,7 +19,7 @@ export function createWhackGame(root, { onComplete }) {
 
   // Constants
   const GAME_DURATION = 10000; // 10 seconds
-  const HITBOX_SIZE = 30;
+  const HITBOX_SIZE = 36;
   const MARGIN = 20;
   const SPAWN_DELAY = 250;
   const MISS_PENALTY = 1000;
