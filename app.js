@@ -169,4 +169,7 @@ modeButtons.forEach((button) => {
 retryButton.addEventListener("click", retryCurrentMode);
 differentTestButton.addEventListener("click", showMenu);
 
+// Make title clickable to return home
+document.getElementById("title-home").addEventListener("click", showMenu);
+
 showMenu();
