@@ -1,394 +1,171 @@
-const modeButtons = document.querySelectorAll(".mode-button");
+import { createStoplightGame } from "./games/stoplight.js";
+import { createWhackGame } from "./games/whack.js";
+import { formatMilliseconds } from "./games/helpers.js";
+
+const modeButtons = document.querySelectorAll("[data-mode]");
 
 const testSelection = document.getElementById("test-selection");
-const gameArea = document.getElementById("game-area");
-const arena = document.getElementById("arena");
-const resultsPanel = document.getElementById("results-panel");
-const resultsTitle = document.getElementById("results-title");
+const playingState = document.getElementById("playing-state");
+const resultsState = document.getElementById("results-state");
 const resultsSummary = document.getElementById("results-summary");
 const retryButton = document.getElementById("retry-button");
 const differentTestButton = document.getElementById("different-test-button");
 
-const reactionPanel = document.getElementById("reaction-panel");
-const panelPhase = document.getElementById("panel-phase");
-const panelInstruction = document.getElementById("panel-instruction");
+const gameRegistry = {
+  stoplight: {
+    templateUrl: "./games/stoplight.html",
+    resultsTemplateUrl: "./games/stoplight-results.html",
+    createGame: createStoplightGame,
+  },
+  whack: {
+    templateUrl: "./games/whack.html",
+    resultsTemplateUrl: "./games/whack-results.html",
+    createGame: createWhackGame,
+  },
+};
 
-const stroopPanel = document.getElementById("stroop-panel");
-const stroopRound = document.getElementById("stroop-round");
-const stroopWord = document.getElementById("stroop-word");
-const trueButton = document.getElementById("true-button");
-const falseButton = document.getElementById("false-button");
-
-const whackPanel = document.getElementById("whack-panel");
-const whackBoard = document.getElementById("whack-board");
-const pixel = document.getElementById("pixel");
-const whackTimer = document.getElementById("whack-timer");
-const whackScore = document.getElementById("whack-score");
-
-const stroopColors = [
-    { label: "RED", value: "#ff6b6b" },
-    { label: "BLUE", value: "#71a7ff" },
-    { label: "GREEN", value: "#7cf29a" },
-    { label: "YELLOW", value: "#ffe27a" }
-];
+const templateCache = new Map();
 
 let currentMode = null;
+let currentGame = null;
 
-let stoplightState = "idle";
-let stoplightTimeoutId = null;
-let stoplightStartTime = 0;
-let stoplightRound = 0;
-let stoplightResults = [];
+async function loadTemplate(url, cacheKey) {
+  const key = cacheKey || url;
 
-let stroopState = "idle";
-let stroopQuestionIndex = 0;
-let stroopQuestionStart = 0;
-let stroopResults = [];
-let currentStroopAnswer = false;
+  if (templateCache.has(key)) {
+    return templateCache.get(key);
+  }
 
-let whackState = "idle";
-let whackScoreValue = 0;
-let whackTimeRemaining = 20;
-let whackTimerIntervalId = null;
-let whackPenaltyTimeoutId = null;
-let whackRoundStart = 0;
-let pixelEnabled = false;
+  const response = await fetch(url);
 
-function formatMilliseconds(value) {
-    return `${Math.round(value)} ms`;
+  if (!response.ok) {
+    throw new Error(`Failed to load template from ${url}`);
+  }
+
+  const markup = await response.text();
+  templateCache.set(key, markup);
+  return markup;
+}
+
+async function renderResults(data) {
+  playingState.classList.add("hidden");
+  resultsState.classList.remove("hidden");
+  resultsSummary.innerHTML = "";
+
+  // Handle old format (array of HTML strings) for backward compatibility
+  if (Array.isArray(data)) {
+    data.forEach((line) => {
+      const item = document.createElement("div");
+      item.className = "result-line";
+      item.innerHTML = line;
+      resultsSummary.appendChild(item);
+    });
+    return;
+  }
+
+  // Handle new format (data object with template)
+  const game = gameRegistry[currentMode];
+  if (game.resultsTemplateUrl) {
+    const template = await loadTemplate(game.resultsTemplateUrl, `${currentMode}-results`);
+    resultsSummary.innerHTML = template;
+
+    if (currentMode === "stoplight") {
+      populateStoplightResults(data);
+    } else if (currentMode === "whack") {
+      populateWhackResults(data);
+    }
+  }
+}
+
+function populateStoplightResults(data) {
+  document.getElementById("average-time").textContent = formatMilliseconds(data.average);
+  document.getElementById("reaction-age").textContent = `Reflexes of a ${data.reactionAge}-year-old`;
+
+  data.results.forEach((time, index) => {
+    document.getElementById(`round-${index + 1}-time`).textContent = formatMilliseconds(time);
+  });
+}
+
+function populateWhackResults(data) {
+  // Hero stats
+  document.getElementById("hit-count").textContent = data.hits;
+  document.getElementById("skill-badge").textContent = data.skillBadge;
+
+  // Stats grid
+  document.getElementById("accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
+  document.getElementById("avg-time").textContent = formatMilliseconds(data.avgTime);
+  document.getElementById("misses").textContent = data.misses;
+}
+
+function destroyCurrentGame() {
+  if (currentGame !== null) {
+    currentGame.destroy();
+    currentGame = null;
+  }
+
+  playingState.innerHTML = "";
+}
+
+function setSelectionButtonsDisabled(isDisabled) {
+  modeButtons.forEach((button) => {
+    button.disabled = isDisabled;
+    button.classList.toggle("active", isDisabled && button.dataset.mode === currentMode);
+    if (!isDisabled) {
+      button.classList.remove("active");
+    }
+  });
 }
 
 function showMenu() {
-    currentMode = null;
-    testSelection.classList.remove("hidden");
-    gameArea.classList.add("hidden");
-    cleanupTimers();
-    resetAllBoards();
+  currentMode = null;
+  destroyCurrentGame();
+  testSelection.classList.remove("hidden");
+  playingState.classList.add("hidden");
+  resultsState.classList.add("hidden");
+  setSelectionButtonsDisabled(false);
 }
 
-function showArena(mode) {
-    currentMode = mode;
-    testSelection.classList.add("hidden");
-    gameArea.classList.remove("hidden");
-    arena.classList.remove("hidden");
-    resultsPanel.classList.add("hidden");
+async function startMode(mode) {
+  currentMode = mode;
+  destroyCurrentGame();
+  setSelectionButtonsDisabled(true);
+  testSelection.classList.add("hidden");
+  resultsState.classList.add("hidden");
+  playingState.classList.remove("hidden");
 
-    reactionPanel.classList.toggle("hidden", mode !== "stoplight");
-    stroopPanel.classList.toggle("hidden", mode !== "stroop");
-    whackPanel.classList.toggle("hidden", mode !== "whack");
-}
+  try {
+    const markup = await loadTemplate(gameRegistry[mode].templateUrl, mode);
+    playingState.innerHTML = markup;
 
-function showResults(title, lines) {
-    arena.classList.add("hidden");
-    resultsPanel.classList.remove("hidden");
-    resultsTitle.textContent = title;
-    resultsSummary.innerHTML = "";
+    if (currentMode !== mode) {
+      return;
+    }
 
-    lines.forEach((line) => {
-        const item = document.createElement("div");
-        item.className = "result-line";
-        item.innerHTML = line;
-        resultsSummary.appendChild(item);
+    currentGame = gameRegistry[mode].createGame(playingState, {
+      onComplete(data) {
+        renderResults(data);
+      },
     });
-}
-
-function cleanupTimers() {
-    if (stoplightTimeoutId !== null) {
-        clearTimeout(stoplightTimeoutId);
-        stoplightTimeoutId = null;
-    }
-
-    if (whackTimerIntervalId !== null) {
-        clearInterval(whackTimerIntervalId);
-        whackTimerIntervalId = null;
-    }
-
-    if (whackPenaltyTimeoutId !== null) {
-        clearTimeout(whackPenaltyTimeoutId);
-        whackPenaltyTimeoutId = null;
-    }
-}
-
-function resetAllBoards() {
-    reactionPanel.className = "reaction-panel idle";
-    panelPhase.textContent = "Round 1";
-    panelInstruction.textContent = "Wait for green, then click as fast as you can.";
-
-    stroopRound.textContent = "Question 1 of 10";
-    stroopWord.textContent = "READY";
-    stroopWord.style.color = "var(--cyan)";
-
-    whackTimer.textContent = "20.0s";
-    whackScore.textContent = "0";
-    pixel.classList.add("hidden");
-    pixel.classList.remove("penalty");
-}
-
-function startMode(mode) {
-    cleanupTimers();
-    resetAllBoards();
-    showArena(mode);
-
-    if (mode === "stoplight") {
-        startStoplightSeries();
-        return;
-    }
-
-    if (mode === "stroop") {
-        startStroop();
-        return;
-    }
-
-    startWhack();
+  } catch (error) {
+    console.error(error);
+    showMenu();
+  }
 }
 
 function retryCurrentMode() {
-    if (!currentMode) {
-        return;
-    }
+  if (currentMode === null) {
+    return;
+  }
 
-    startMode(currentMode);
-}
-
-function setStoplightPanel(state, phaseText, instructionText) {
-    reactionPanel.className = `reaction-panel ${state}`;
-    panelPhase.textContent = phaseText;
-    panelInstruction.textContent = instructionText;
-}
-
-function startStoplightSeries() {
-    stoplightState = "idle";
-    stoplightRound = 0;
-    stoplightResults = [];
-    queueStoplightRound();
-}
-
-function queueStoplightRound() {
-    stoplightRound += 1;
-    stoplightState = "waiting";
-    setStoplightPanel("waiting", `Round ${stoplightRound}`, "Wait for green. Clicking early restarts this round.");
-
-    const delay = 1400 + Math.random() * 2600;
-    stoplightTimeoutId = window.setTimeout(() => {
-        stoplightState = "ready";
-        stoplightStartTime = performance.now();
-        setStoplightPanel("ready", `Round ${stoplightRound}`, "Green means go. Click now.");
-        stoplightTimeoutId = null;
-    }, delay);
-}
-
-function restartCurrentStoplightRound() {
-    stoplightState = "waiting";
-    setStoplightPanel("waiting", `Round ${stoplightRound}`, "Wait for green. Clicking early restarts this round.");
-
-    const delay = 1400 + Math.random() * 2600;
-    stoplightTimeoutId = window.setTimeout(() => {
-        stoplightState = "ready";
-        stoplightStartTime = performance.now();
-        setStoplightPanel("ready", `Round ${stoplightRound}`, "Green means go. Click now.");
-        stoplightTimeoutId = null;
-    }, delay);
-}
-
-function finishStoplightSeries() {
-    const average = stoplightResults.reduce((sum, time) => sum + time, 0) / stoplightResults.length;
-    const fastest = Math.min(...stoplightResults);
-    const slowest = Math.max(...stoplightResults);
-
-    showResults("Stoplight Complete", [
-        `<strong>Average:</strong> ${formatMilliseconds(average)}`,
-        `<strong>Fastest:</strong> ${formatMilliseconds(fastest)}`,
-        `<strong>Slowest:</strong> ${formatMilliseconds(slowest)}`,
-        `<strong>Rounds:</strong> ${stoplightResults.map((time, index) => `R${index + 1} ${formatMilliseconds(time)}`).join(" • ")}`
-    ]);
-}
-
-function handleStoplightPanelClick() {
-    if (currentMode !== "stoplight") {
-        return;
-    }
-
-    if (stoplightState === "waiting") {
-        if (stoplightTimeoutId !== null) {
-            clearTimeout(stoplightTimeoutId);
-            stoplightTimeoutId = null;
-        }
-
-        stoplightState = "early";
-        setStoplightPanel("early", `Round ${stoplightRound}`, "Too soon. This round is restarting...");
-
-        window.setTimeout(() => {
-            if (currentMode === "stoplight" && resultsPanel.classList.contains("hidden")) {
-                restartCurrentStoplightRound();
-            }
-        }, 900);
-        return;
-    }
-
-    if (stoplightState === "ready") {
-        const reactionTime = performance.now() - stoplightStartTime;
-        stoplightResults.push(reactionTime);
-        stoplightState = "result";
-        setStoplightPanel("result", formatMilliseconds(reactionTime), `Round ${stoplightRound} complete.`);
-
-        if (stoplightResults.length === 3) {
-            finishStoplightSeries();
-            return;
-        }
-
-        window.setTimeout(() => {
-            if (currentMode === "stoplight" && resultsPanel.classList.contains("hidden")) {
-                queueStoplightRound();
-            }
-        }, 900);
-    }
-}
-
-function randomStroopPrompt() {
-    const wordChoice = stroopColors[Math.floor(Math.random() * stroopColors.length)];
-    const isMatch = Math.random() < 0.5;
-    const mismatchOptions = stroopColors.filter((color) => color.label !== wordChoice.label);
-    const colorChoice = isMatch
-        ? wordChoice
-        : mismatchOptions[Math.floor(Math.random() * mismatchOptions.length)];
-
-    currentStroopAnswer = isMatch;
-    stroopWord.textContent = wordChoice.label;
-    stroopWord.style.color = colorChoice.value;
-    stroopQuestionStart = performance.now();
-}
-
-function startStroop() {
-    stroopState = "playing";
-    stroopQuestionIndex = 0;
-    stroopResults = [];
-    stroopRound.textContent = "Question 1 of 10";
-    randomStroopPrompt();
-}
-
-function finishStroop() {
-    const correctCount = stroopResults.filter((result) => result.correct).length;
-    const averageTime = stroopResults.reduce((sum, result) => sum + result.time, 0) / stroopResults.length;
-
-    showResults("Color Match Complete", [
-        `<strong>Score:</strong> ${correctCount} / 10`,
-        `<strong>Average response:</strong> ${formatMilliseconds(averageTime)}`,
-        `<strong>Accuracy:</strong> ${Math.round((correctCount / 10) * 100)}%`
-    ]);
-}
-
-function answerStroop(answer) {
-    if (currentMode !== "stroop" || stroopState !== "playing") {
-        return;
-    }
-
-    const reactionTime = performance.now() - stroopQuestionStart;
-    const isCorrect = answer === currentStroopAnswer;
-
-    stroopResults.push({ correct: isCorrect, time: reactionTime });
-    stroopQuestionIndex += 1;
-
-    if (stroopQuestionIndex >= 10) {
-        finishStroop();
-        return;
-    }
-
-    stroopRound.textContent = `Question ${stroopQuestionIndex + 1} of 10`;
-    randomStroopPrompt();
-}
-
-function updateWhackHud() {
-    whackTimer.textContent = `${whackTimeRemaining.toFixed(1)}s`;
-    whackScore.textContent = String(whackScoreValue);
-}
-
-function placePixel() {
-    const boardRect = whackBoard.getBoundingClientRect();
-    const pixelSize = 24;
-    const left = Math.random() * Math.max(0, boardRect.width - pixelSize);
-    const top = Math.random() * Math.max(0, boardRect.height - pixelSize);
-
-    pixel.style.left = `${left}px`;
-    pixel.style.top = `${top}px`;
-    pixel.classList.remove("hidden", "penalty");
-    pixelEnabled = true;
-}
-
-function startWhack() {
-    whackState = "playing";
-    whackScoreValue = 0;
-    whackTimeRemaining = 20;
-    whackRoundStart = performance.now();
-    updateWhackHud();
-    placePixel();
-
-    whackTimerIntervalId = window.setInterval(() => {
-        const elapsed = (performance.now() - whackRoundStart) / 1000;
-        whackTimeRemaining = Math.max(0, 20 - elapsed);
-        updateWhackHud();
-
-        if (whackTimeRemaining <= 0) {
-            finishWhack();
-        }
-    }, 100);
-}
-
-function finishWhack() {
-    cleanupTimers();
-    whackState = "done";
-    pixel.classList.add("hidden");
-    pixelEnabled = false;
-    showResults("Whack a Pixel Complete", [
-        `<strong>Final score:</strong> ${whackScoreValue}`,
-        `<strong>Round length:</strong> 20 seconds`,
-        `<strong>Penalty:</strong> Misclicks freeze the pixel for 1 second`
-    ]);
-}
-
-function handlePixelClick(event) {
-    event.stopPropagation();
-
-    if (currentMode !== "whack" || whackState !== "playing" || !pixelEnabled) {
-        return;
-    }
-
-    whackScoreValue += 1;
-    updateWhackHud();
-    placePixel();
-}
-
-function handleWhackMiss() {
-    if (currentMode !== "whack" || whackState !== "playing" || !pixelEnabled) {
-        return;
-    }
-
-    pixelEnabled = false;
-    pixel.classList.add("penalty");
-
-    if (whackPenaltyTimeoutId !== null) {
-        clearTimeout(whackPenaltyTimeoutId);
-    }
-
-    whackPenaltyTimeoutId = window.setTimeout(() => {
-        whackPenaltyTimeoutId = null;
-
-        if (currentMode !== "whack" || whackState !== "playing") {
-            return;
-        }
-
-        placePixel();
-    }, 1000);
+  void startMode(currentMode);
 }
 
 modeButtons.forEach((button) => {
-    button.addEventListener("click", () => startMode(button.dataset.mode));
+  button.addEventListener("click", () => {
+    void startMode(button.dataset.mode);
+  });
 });
 
-reactionPanel.addEventListener("click", handleStoplightPanelClick);
-trueButton.addEventListener("click", () => answerStroop(true));
-falseButton.addEventListener("click", () => answerStroop(false));
-pixel.addEventListener("click", handlePixelClick);
-whackBoard.addEventListener("click", handleWhackMiss);
 retryButton.addEventListener("click", retryCurrentMode);
 differentTestButton.addEventListener("click", showMenu);
 

@@ -55,7 +55,6 @@
             </a>
 
             <h1>
-                <span class="loader"></span>
                 <span>Reaction Lab</span>
                 <span class="loader"></span>
             </h1>
@@ -65,80 +64,37 @@
         </header>
 
         <main class="main-content">
-            <section class="test-selection" id="test-selection">
+            <section class="state state-selection" id="test-selection">
                 <div class="mode-list">
-                    <button class="mode-button" id="mode-stoplight" type="button" data-mode="stoplight">
+                    <button class="hover-button" id="mode-stoplight" type="button" data-mode="stoplight">
                         <span class="mode-name">Stoplight</span>
                         <span class="mode-copy">3 rounds. Wait for green, then click instantly.</span>
                     </button>
-                    <button class="mode-button" id="mode-stroop" type="button" data-mode="stroop">
-                        <span class="mode-name">Color Match</span>
-                        <span class="mode-copy">Tap True or False based on whether the word matches its color.</span>
-                    </button>
-                    <button class="mode-button" id="mode-whack" type="button" data-mode="whack">
+                    <button class="hover-button" id="mode-whack" type="button" data-mode="whack">
                         <span class="mode-name">Whack a Pixel</span>
-                        <span class="mode-copy">Hit as many pixels as you can in 20 seconds.</span>
+                        <span class="mode-copy">Tap as many pixels as you can. Careful, wrong taps cost time.</span>
                     </button>
                 </div>
             </section>
 
-            <section class="game-area hidden" id="game-area">
-                <div class="arena" id="arena">
-                    <button class="reaction-panel idle" id="reaction-panel" type="button">
-                        <span class="panel-phase" id="panel-phase">Round 1</span>
-                        <span class="panel-instruction" id="panel-instruction">Wait for green, then click as fast as you can.</span>
-                    </button>
+            <section class="state state-playing hidden" id="playing-state"></section>
 
-                    <div class="stroop-panel hidden" id="stroop-panel">
-                        <p class="stroop-round" id="stroop-round">Question 1 of 10</p>
-                        <div class="stroop-word-wrap">
-                            <p class="stroop-word" id="stroop-word">RED</p>
-                        </div>
-                        <p class="stroop-instruction">Do the word and the text color match?</p>
-                        <div class="answer-buttons">
-                            <button class="answer-button true-button" id="true-button" type="button">True</button>
-                            <button class="answer-button false-button" id="false-button" type="button">False</button>
-                        </div>
-                    </div>
-
-                    <div class="whack-panel hidden" id="whack-panel">
-                        <div class="whack-topline">
-                            <div>
-                                <p class="mini-label">Time Left</p>
-                                <p class="mini-value" id="whack-timer">20.0s</p>
-                            </div>
-                            <div>
-                                <p class="mini-label">Hits</p>
-                                <p class="mini-value" id="whack-score">0</p>
-                            </div>
-                        </div>
-                        <div class="whack-board" id="whack-board">
-                            <button class="pixel hidden" id="pixel" type="button" aria-label="Target pixel"></button>
-                        </div>
-                        <p class="whack-helper">Click the glowing pixel. Misses freeze the current one for 1 second.</p>
-                    </div>
-                </div>
-
-                <div class="results-panel hidden" id="results-panel">
-                    <p class="results-label">Results</p>
-                    <h2 class="results-title" id="results-title">Test Complete</h2>
-                    <div class="results-summary" id="results-summary"></div>
-                    <div class="results-actions">
-                        <button class="primary-action" id="retry-button" type="button">Retry</button>
-                        <button class="secondary-action" id="different-test-button" type="button">Different Test</button>
-                    </div>
+            <section class="state state-results hidden" id="results-state">
+                <p class="results-label">Results</p>
+                <div class="results-summary" id="results-summary"></div>
+                <div class="results-actions">
+                    <button class="hover-button results-button" id="retry-button" type="button">Retry</button>
+                    <button class="hover-button results-button" id="different-test-button" type="button">New Test</button>
                 </div>
             </section>
         </main>
 
         <footer class="footer">
-            <p>
-                This is one of the projects students can build at Aspire Coding Academy.
-                <a href="https://aspirecodingacademy.com/coding-class" target="_blank" rel="noreferrer">Learn more</a>
-            </p>
+            <p>This is one of the projects students build at Aspire Coding Academy. <a
+                    href="https://aspirecodingacademy.com/coding-class" target="_blank">Ready to sign up?</a></p>
         </footer>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
