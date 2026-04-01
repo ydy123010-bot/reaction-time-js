@@ -144,7 +144,11 @@ export function createStoplightGame(root, { onComplete }) {
       setPanel("result", formatMilliseconds(reactionTime), "");
       transitionTimeoutId = window.setTimeout(finishSeries, 1500);
     } else {
-      setPanel("result", formatMilliseconds(reactionTime), "Tap to continue");
+      setPanel(
+        "result",
+        formatMilliseconds(reactionTime),
+        "Tap for next round",
+      );
     }
   }
 
