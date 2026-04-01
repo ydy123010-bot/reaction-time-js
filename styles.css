@@ -1,6 +1,6 @@
 :root {
     --bg: #07111f;
-    --card: rgba(21, 40, 69, 0.82);
+    --card: rgba(35, 58, 91, 0.82);
     --card-border: #8fe8ff;
     --text: #f5fbff;
     --muted: #9cb7d3;
@@ -24,8 +24,8 @@ body {
     font-family: "JetBrains Mono", monospace;
     color: var(--text);
     background:
-        radial-gradient(circle at top, rgba(91, 160, 255, 0.18), transparent 35%),
-        linear-gradient(160deg, #08111e 0%, #112541 55%, #050c16 100%);
+        radial-gradient(circle at top, rgba(83, 151, 246, 0.18), transparent 35%),
+        linear-gradient(160deg, #050b13 0%, #112541 55%, #010306 100%);
     padding: 60px 20px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -117,7 +117,7 @@ h1 {
     border-radius: 8px;
     backdrop-filter: blur(20px);
     box-shadow: var(--shadow);
-    padding: 12px;
+    padding: 18px;
 }
 
 .mode-list {

@@ -44,15 +44,14 @@ export function createStoplightGame(root, { onComplete }) {
   }
 
   function calculateTopPercent(time) {
-    // Flipped formula to return "top X%" directly
-    // Lower time (faster) = lower top% (better)
-    const slope = 0.408333;
-    const intercept = -64.3333;
+    const slope = 98 / 240; // 0.408333
+    const intercept = 1 - (slope * 160); // -64.3333
 
-    let topPercent = slope * time + intercept;
+    let topX = (slope * time) + intercept;
 
     // Clamp the values between 1 and 99
-    return Math.round(Math.max(1, Math.min(99, topPercent)));
+    // Math.ceil is used so Top 1% remains exclusive to the best scores
+    return Math.max(1, Math.min(99, Math.ceil(topX)));
   }
 
   function finishSeries() {
@@ -67,17 +66,17 @@ export function createStoplightGame(root, { onComplete }) {
     // Determine reaction description based on average time (7 buckets)
     let reactionDescription = "You are reaching unc status";
     if (average < 180) reactionDescription = "You have elite reaction speed!";
-    else if (average < 200) reactionDescription = "Dang. That was crazy fast.";
-    else if (average < 225)
-      reactionDescription = "You might be on to something. That was fast.";
-    else if (average < 250)
-      reactionDescription = "Pretty good, try to get under 225ms.";
+    else if (average < 200)
+      reactionDescription =
+        "Dang. That was insane, you have lightning reflexes.";
+    else if (average < 225) reactionDescription = "Very impressive.";
     else if (average < 275)
+      reactionDescription = "Nice work, that was good focus.";
+    else if (average < 300)
       reactionDescription = "Nice, this is an average reaction time.";
-    else if (average < 300) reactionDescription = "Well done, not too shabby.";
-    else if (average < 350)
+    else if (average < 350) reactionDescription = "Not too shabby.";
+    else
       reactionDescription = "Need a bit of practice, but you have potential.";
-    else reactionDescription = "I think you can do better, try again!";
 
     onComplete({
       average,

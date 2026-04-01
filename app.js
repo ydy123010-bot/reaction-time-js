@@ -66,7 +66,10 @@ async function renderResults(data) {
   // Handle new format (data object with template)
   const game = gameRegistry[currentMode];
   if (game.resultsTemplateUrl) {
-    const template = await loadTemplate(game.resultsTemplateUrl, `${currentMode}-results`);
+    const template = await loadTemplate(
+      game.resultsTemplateUrl,
+      `${currentMode}-results`,
+    );
     resultsSummary.innerHTML = template;
 
     if (currentMode === "stoplight") {
@@ -78,22 +81,30 @@ async function renderResults(data) {
 }
 
 function populateStoplightResults(data) {
-  document.getElementById("average-time").textContent = formatMilliseconds(data.average);
-  document.getElementById("reaction-description").textContent = `Top ${data.topPercent}% · ${data.reactionDescription}`;
+  document.getElementById("average-time").textContent = formatMilliseconds(
+    data.average,
+  );
+  document.getElementById("reaction-description").innerHTML =
+    `Faster than ${data.topPercent}% of people.<br>${data.reactionDescription}`;
 
   data.results.forEach((time, index) => {
-    document.getElementById(`round-${index + 1}-time`).textContent = formatMilliseconds(time);
+    document.getElementById(`round-${index + 1}-time`).textContent =
+      formatMilliseconds(time);
   });
 }
 
 function populateWhackResults(data) {
   // Hero stats
   document.getElementById("hit-count").textContent = data.hits;
-  document.getElementById("reaction-description").textContent = `${data.skillBadge} · ${data.reactionDescription}`;
+  document.getElementById("reaction-description").textContent =
+    `${data.skillBadge} · ${data.reactionDescription}`;
 
   // Stats grid
-  document.getElementById("accuracy").textContent = `${data.accuracy.toFixed(1)}%`;
-  document.getElementById("avg-time").textContent = formatMilliseconds(data.avgTime);
+  document.getElementById("accuracy").textContent =
+    `${data.accuracy.toFixed(1)}%`;
+  document.getElementById("avg-time").textContent = formatMilliseconds(
+    data.avgTime,
+  );
   document.getElementById("misses").textContent = data.misses;
 }
 
@@ -109,7 +120,10 @@ function destroyCurrentGame() {
 function setSelectionButtonsDisabled(isDisabled) {
   modeButtons.forEach((button) => {
     button.disabled = isDisabled;
-    button.classList.toggle("active", isDisabled && button.dataset.mode === currentMode);
+    button.classList.toggle(
+      "active",
+      isDisabled && button.dataset.mode === currentMode,
+    );
     if (!isDisabled) {
       button.classList.remove("active");
     }
