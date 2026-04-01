@@ -43,15 +43,15 @@ export function createStoplightGame(root, { onComplete }) {
     }
   }
 
-  function calculateTopPercent(time) {
-    const slope = 98 / 240; // 0.408333
-    const intercept = 1 - (slope * 160); // -64.3333
+  function calculatePercentile(time) {
+    // Linear slope: -98 / 240
+    const slope = -0.408333;
+    const intercept = 164.3333;
 
-    let topX = (slope * time) + intercept;
+    let percentile = slope * time + intercept;
 
     // Clamp the values between 1 and 99
-    // Math.ceil is used so Top 1% remains exclusive to the best scores
-    return Math.max(1, Math.min(99, Math.ceil(topX)));
+    return Math.round(Math.max(1, Math.min(99, percentile)));
   }
 
   function finishSeries() {
@@ -61,7 +61,7 @@ export function createStoplightGame(root, { onComplete }) {
       results.reduce((sum, time) => sum + time, 0) / results.length;
     const fastest = Math.min(...results);
     const slowest = Math.max(...results);
-    const topPercent = calculateTopPercent(average);
+    const percentile = calculatePercentile(average);
 
     // Determine reaction description based on average time (7 buckets)
     let reactionDescription = "You are reaching unc status";
@@ -73,14 +73,14 @@ export function createStoplightGame(root, { onComplete }) {
     else if (average < 275)
       reactionDescription = "Nice work, that was good focus.";
     else if (average < 300)
-      reactionDescription = "Nice, this is an average reaction time.";
+      reactionDescription = "Good job, that was solid work.";
     else if (average < 350) reactionDescription = "Not too shabby.";
     else
       reactionDescription = "Need a bit of practice, but you have potential.";
 
     onComplete({
       average,
-      topPercent,
+      percentile,
       reactionDescription,
       fastest,
       slowest,

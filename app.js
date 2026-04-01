@@ -85,7 +85,7 @@ function populateStoplightResults(data) {
     data.average,
   );
   document.getElementById("reaction-description").innerHTML =
-    `Faster than ${data.topPercent}% of people.<br>${data.reactionDescription}`;
+    `Faster than ${data.percentile}% of people.<br>${data.reactionDescription}`;
 
   data.results.forEach((time, index) => {
     document.getElementById(`round-${index + 1}-time`).textContent =
