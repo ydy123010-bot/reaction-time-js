@@ -6,8 +6,15 @@ export function createWhackGame(root, { onComplete }) {
   // State machine
   let state = "entry"; // "entry" | "playing" | "complete"
 
+  // Constants
+  const GAME_DURATION = 15000; // 15 seconds
+  const HITBOX_SIZE = 36;
+  const MARGIN = 20;
+  const SPAWN_DELAY = 250;
+  const MISS_PENALTY = 1000;
+
   // Game data
-  let timeRemaining = 15000; // milliseconds
+  let timeRemaining = GAME_DURATION;
   let hits = 0;
   let misses = 0;
   let hitTimes = []; // Array of reaction times in milliseconds
@@ -17,21 +24,15 @@ export function createWhackGame(root, { onComplete }) {
   let currentPixel = null;
   let animationFrameId = null;
 
-  // Constants
-  const GAME_DURATION = 11000; // 11 seconds
-  const HITBOX_SIZE = 36;
-  const MARGIN = 20;
-  const SPAWN_DELAY = 250;
-  const MISS_PENALTY = 1000;
-
   function setPanel(panelState, content = {}) {
     state = panelState;
-    panel.className = `whack-panel ${panelState}`;
+    panel.className = `game-panel ${panelState}`;
 
     if (panelState === "entry") {
       panelPhase.textContent = "TAP TO START";
       panelPhase.style.display = "";
-      hudContent.textContent = "";
+      hudContent.textContent =
+        "15 seconds. Tap green pixels, misses cost time. Tap to start.";
     } else if (panelState === "playing") {
       // Hide panel text during playing so clicks pass through to panel
       panelPhase.style.display = "none";

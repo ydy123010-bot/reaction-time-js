@@ -8,8 +8,8 @@ const testSelection = document.getElementById("test-selection");
 const playingState = document.getElementById("playing-state");
 const resultsState = document.getElementById("results-state");
 const resultsSummary = document.getElementById("results-summary");
-const retryButton = document.getElementById("retry-button");
 const differentTestButton = document.getElementById("different-test-button");
+const shareButton = document.getElementById("share-button");
 
 const gameRegistry = {
   stoplight: {
@@ -28,6 +28,7 @@ const templateCache = new Map();
 
 let currentMode = null;
 let currentGame = null;
+let currentResultsData = null;
 
 async function loadTemplate(url, cacheKey) {
   const key = cacheKey || url;
@@ -48,9 +49,13 @@ async function loadTemplate(url, cacheKey) {
 }
 
 async function renderResults(data) {
+  document.body.classList.remove("playing-mode");
   playingState.classList.add("hidden");
   resultsState.classList.remove("hidden");
   resultsSummary.innerHTML = "";
+
+  // Store results data for sharing
+  currentResultsData = data;
 
   // Handle old format (array of HTML strings) for backward compatibility
   if (Array.isArray(data)) {
@@ -131,6 +136,7 @@ function setSelectionButtonsDisabled(isDisabled) {
 }
 
 function showMenu() {
+  document.body.classList.remove("playing-mode");
   currentMode = null;
   destroyCurrentGame();
   testSelection.classList.remove("hidden");
@@ -140,6 +146,7 @@ function showMenu() {
 }
 
 async function startMode(mode) {
+  document.body.classList.add("playing-mode");
   currentMode = mode;
   destroyCurrentGame();
   setSelectionButtonsDisabled(true);
@@ -166,24 +173,38 @@ async function startMode(mode) {
   }
 }
 
-function retryCurrentMode() {
-  if (currentMode === null) {
-    return;
-  }
-
-  void startMode(currentMode);
-}
-
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     void startMode(button.dataset.mode);
   });
 });
 
-retryButton.addEventListener("click", retryCurrentMode);
 differentTestButton.addEventListener("click", showMenu);
 
-// Make title clickable to return home
-document.getElementById("title-home").addEventListener("click", showMenu);
+shareButton.addEventListener("click", async () => {
+  if (!currentResultsData || !currentMode) return;
+
+  const url = window.location.href;
+  let shareText = "";
+
+  if (currentMode === "stoplight") {
+    const avgTime = formatMilliseconds(currentResultsData.average);
+    shareText = `My reaction time is ${avgTime}. Faster than ${currentResultsData.percentile}% of people! What's yours? ${url}`;
+  } else if (currentMode === "whack") {
+    shareText = `On the Coordination Test I got ${currentResultsData.hits} pixels. Can you do better? ${url}`;
+  }
+
+  try {
+    await navigator.clipboard.writeText(shareText);
+    // Optional: Show feedback that text was copied
+    const originalText = shareButton.textContent;
+    shareButton.textContent = "Copied!";
+    setTimeout(() => {
+      shareButton.textContent = originalText;
+    }, 2000);
+  } catch (err) {
+    console.error("Failed to copy:", err);
+  }
+});
 
 showMenu();

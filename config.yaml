@@ -2,7 +2,7 @@
 site:
   domain: "https://reaction-lab.netlify.app"
   title: "Reaction Lab - Aspire Coding Academy"
-  description: "Challenge your reflexes. Tests built with HTML, CSS, and JavaScript. Build projects like this at Aspire Coding Academy."
+  description: "Test your reflexes. Tests built with HTML, CSS, and JavaScript. Build projects like this at Aspire Coding Academy."
 
 # Google Tag Manager
 gtm:

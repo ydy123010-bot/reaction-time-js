@@ -26,14 +26,12 @@ export function createStoplightGame(root, { onComplete }) {
   }
 
   function setPanel(panelState, phaseText, instructionText) {
-    reactionPanel.className = `reaction-panel ${panelState}`;
+    reactionPanel.className = `game-panel ${panelState}`;
     panelPhase.textContent = phaseText;
     panelInstruction.textContent = instructionText;
 
     // Update HUD
-    if (panelState === "entry") {
-      hudContent.textContent = "3 Rounds. Tap to start.";
-    } else if (
+    if (
       panelState === "waiting" ||
       panelState === "ready" ||
       panelState === "result" ||
@@ -107,11 +105,6 @@ export function createStoplightGame(root, { onComplete }) {
   }
 
   function handleClick() {
-    if (state === "entry") {
-      queueNextRound();
-      return;
-    }
-
     if (state === "result" || state === "early") {
       if (results.length === 3) {
         finishSeries();
@@ -155,7 +148,7 @@ export function createStoplightGame(root, { onComplete }) {
   reactionPanel.addEventListener("pointerdown", handleClick);
 
   // Initialize HUD
-  hudContent.textContent = "3 Rounds. Tap to start.";
+  queueNextRound();
 
   return {
     destroy() {

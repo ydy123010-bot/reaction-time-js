@@ -14,7 +14,7 @@
 
     <title>Reaction Lab - Aspire Coding Academy</title>
     <meta name="description" content="Challenge your reflexes. Tests built with HTML, CSS, and JavaScript. Build projects like this at Aspire Coding Academy.">
-    <meta name="keywords" content="reaction time game, javascript game, coding for kids, learn to code, aspire coding academy, stroop test, whack a mole">
+    <meta name="keywords" content="reaction time game, javascript game, coding for kids, learn to code, aspire coding academy">
     <meta name="author" content="Aspire Coding Academy">
 
     <meta property="og:type" content="website">
@@ -48,50 +48,46 @@
     <!-- End Google Tag Manager (noscript) -->
     <div class="page-glow"></div>
 
-    <div class="app-shell">
-        <header class="hero">
-            <a class="brand" href="https://aspirecodingacademy.com" target="_blank" rel="noreferrer">
-                <img src="/assets/logo/white_logo_text_svg.svg" alt="Aspire Coding Academy Logo" class="logo">
-            </a>
+    <div class="app-container">
+        <div class="centered">
+        
+            <header class="app-header" id="app-header">
+                <a class="brand" href="https://aspirecodingacademy.com" target="_blank" rel="noreferrer">
+                    <img src="/assets/logo/white_logo_text_svg.svg" alt="Aspire Coding Academy Logo" class="logo">
+                </a>
 
-            <h1 id="title-home" style="cursor: pointer;">
-                <span>Reaction Lab</span>
-                <span class="loader"></span>
-            </h1>
-            <p class="intro">
-                Test your reaction time
-            </p>
-        </header>
+                <h1>
+                    <span>Reaction Lab</span>
+                    <span class="loader"></span>
+                </h1>
+            </header>
 
-        <main class="main-content">
-            <section class="state state-selection" id="test-selection">
-                <div class="mode-list">
+            <main>
+                <section class="state state-selection" id="test-selection">
+                    <p class="intro">
+                        Wait until the screen turns green, then tap. You have 3 rounds.
+                    </p>
                     <button class="hover-button" id="mode-stoplight" type="button" data-mode="stoplight">
-                        <span class="mode-name">Stoplight</span>
-                        <span class="mode-copy">3 rounds. Wait for green, then click.</span>
+                        <span class="mode-name">Test Your Reaction Time</span>
                     </button>
-                    <button class="hover-button" id="mode-whack" type="button" data-mode="whack">
-                        <span class="mode-name">Whack a Pixel</span>
-                        <span class="mode-copy">Tap as many pixels as you can. Careful, wrong taps cost time.</span>
-                    </button>
-                </div>
-            </section>
+                </section>
 
-            <section class="state state-playing hidden" id="playing-state"></section>
+                <section class="state state-playing hidden" id="playing-state"></section>
 
-            <section class="state state-results hidden" id="results-state">
-                <div class="results-summary" id="results-summary"></div>
-                <div class="results-actions">
-                    <button class="hover-button results-button" id="retry-button" type="button">Retry</button>
-                    <button class="hover-button results-button" id="different-test-button" type="button">New Test</button>
-                </div>
-            </section>
-        </main>
+                <section class="state state-results hidden" id="results-state">
+                    <div class="results-summary" id="results-summary"></div>
+                    <div class="results-actions">
+                        <button class="hover-button results-button" id="share-button" type="button">Share</button>
+                        <button class="hover-button results-button" id="different-test-button" type="button">Try Again</button>
+                    </div>
+                </section>
+            </main>
 
-        <footer class="footer">
-            <p>This is one of the projects students build at Aspire Coding Academy. <a
-                    href="https://aspirecodingacademy.com/coding-class" target="_blank">Ready to sign up?</a></p>
-        </footer>
+            <footer class="app-footer" id="app-footer">
+                <p>Reaction Lab is one of the projects students build at Aspire Coding Academy. <a
+                        href="https://aspirecodingacademy.com/coding-class" target="_blank">Ready to sign up?</a></p>
+            </footer>
+            </div>
     </div>
 
     <script type="module" src="app.js"></script>
