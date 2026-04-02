@@ -19,11 +19,14 @@
     padding: 0;
 }
 
+html {
+    background: #07111f; /* Match --bg color for overscroll */
+    overflow: hidden;
+}
+
 body {
     min-height: 100vh;
-    min-height: -webkit-fill-available; /* Safari fix */
     height: 100vh;
-    height: -webkit-fill-available; /* Safari fix */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -544,8 +547,7 @@ body.playing-mode {
         max-width: none;
         max-height: none;
         width: 100vw;
-        height: 100vh;
-    }
+        height: 100vh;    }
 }
 
 /* Desktop: keep container size, just fill it */

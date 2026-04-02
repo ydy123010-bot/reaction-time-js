@@ -189,21 +189,37 @@ shareButton.addEventListener("click", async () => {
 
   if (currentMode === "stoplight") {
     const avgTime = formatMilliseconds(currentResultsData.average);
-    shareText = `My reaction time is ${avgTime}. Faster than ${currentResultsData.percentile}% of people! What's yours? ${url}`;
+    shareText = `My reaction time is ${avgTime}. Faster than ${currentResultsData.percentile}% of people! What's yours?`;
   } else if (currentMode === "whack") {
-    shareText = `On the Coordination Test I got ${currentResultsData.hits} pixels. Can you do better? ${url}`;
+    shareText = `On the Coordination Test I got ${currentResultsData.hits} pixels. Can you do better?`;
   }
 
-  try {
-    await navigator.clipboard.writeText(shareText);
-    // Optional: Show feedback that text was copied
-    const originalText = shareButton.textContent;
-    shareButton.textContent = "Copied!";
-    setTimeout(() => {
-      shareButton.textContent = originalText;
-    }, 2000);
-  } catch (err) {
-    console.error("Failed to copy:", err);
+  // Try native share first (mobile), fallback to clipboard (desktop)
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Reaction Lab',
+        text: shareText,
+        url: url
+      });
+    } catch (err) {
+      // User cancelled or share failed
+      if (err.name !== 'AbortError') {
+        console.error("Share failed:", err);
+      }
+    }
+  } else {
+    // Fallback: copy to clipboard on desktop
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${url}`);
+      const originalText = shareButton.textContent;
+      shareButton.textContent = "Copied!";
+      setTimeout(() => {
+        shareButton.textContent = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   }
 });
 
