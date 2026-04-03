@@ -1,0 +1,34 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "github.copilot.enable": {
+      "*": false
+    },
+    "github.copilot.chat.enabled": false,
+    "chat.commandCenter.enabled": false,
+    "chat.editor.enabled": false,
+    "editor.inlineSuggest.enabled": false,
+    "editor.quickSuggestions": {
+      "other": false,
+      "comments": false,
+      "strings": false
+    },
+    "editor.suggestOnTriggerCharacters": false,
+    "editor.parameterHints.enabled": false,
+    "editor.wordBasedSuggestions": "off",
+    "editor.tabCompletion": "off",
+    "files.exclude": {
+      "**/.devcontainer": true,
+      "**/.gitignore": true,
+      "**/*.code-workspace": true,
+      "**/words.js": true,
+      "**/app.js": true,
+      "**/solutions": true,
+      "**/RULES.md": true
+    }
+  }
+}

@@ -1,14 +1,11 @@
 :root {
-    --bg: #07111f;
     --card: rgba(35, 58, 91, 0.82);
-    --card-border: #8fe8ff;
     --text: #f5fbff;
     --muted: #9cb7d3;
     --cyan: #8fe8ff;
     --blue: #5f8dff;
     --green: #10E575;
     --red: #FF2A55;
-    --orange: #ffaf61;
     --wait-gray: #5C6B73;
     --shadow: 0 24px 70px rgba(0, 0, 0, 0.35); 
 }
@@ -20,7 +17,6 @@
 }
 
 html {
-    background: #07111f; /* Match --bg color for overscroll */
     overflow: hidden;
 }
 
@@ -32,9 +28,7 @@ body {
     justify-content: center;
     font-family: "JetBrains Mono", monospace;
     color: var(--text);
-    background:
-        radial-gradient(circle at top, rgba(83, 151, 246, 0.18), transparent 35%),
-        linear-gradient(160deg, #050b13 0%, #112541 55%, #010306 100%);
+    background: #07111f;
     padding: 0;
     margin: 0;
     overflow: hidden;
@@ -51,17 +45,6 @@ select {
 
 .hidden {
     display: none !important;
-}
-
-.page-glow {
-    position: fixed;
-    inset: auto auto 10% 50%;
-    width: min(70vw, 700px);
-    height: 300px;
-    background: radial-gradient(circle, rgba(92, 157, 255, 0.18), transparent 70%);
-    transform: translateX(-50%);
-    pointer-events: none;
-    filter: blur(20px);
 }
 
 /* Mobile-first: default styles for small screens */
@@ -82,6 +65,10 @@ select {
     padding: 18px;
 }
 
+.app-main {
+    width: 100%;
+}
+
 /* Desktop: larger screens get max-width/height and rounded corners */
 @media (min-width: 641px) and (min-height: 700px) {
     .app-container {
@@ -92,54 +79,20 @@ select {
     }
 }
 
-.centered {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-}
-
-/* Logo styling */
-.logo {
-    max-width: 120px;
-    height: auto;
-    margin-bottom: 15px;
-}
-
 .app-header {
     text-align: center;
     margin-bottom: 28px;
 }
 
-.brand {
-    display: inline-flex;
-    align-items: center;
-    color: var(--text);
-    text-decoration: none;
-    margin-bottom: 20px;
-}
-
 .intro,
-.app-footer,
-.whack-helper,
-.mini-label {
+.app-footer {
     color: var(--muted);
-}
-
-.mini-label {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.75rem;
 }
 
 h1 {
     font-size: 2.2rem;
     line-height: 0.95;
     margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
 }
 
 .intro {
@@ -154,14 +107,13 @@ h1 {
     width: 100%;
 }
 
-.state-selection {
+#test-selection {
     display: flex;
     flex-direction: column;
 }
 
-.state-playing {
+#playing-state {
     flex: 1;
-    padding-bottom: 0;
 }
 
 .game-container {
@@ -201,15 +153,9 @@ h1 {
     min-height: 100%;
 }
 
-.hover-button,
-.answer-button,
-.pixel {
+.hover-button {
     border: none;
     cursor: pointer;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, opacity 0.18s ease;
-}
-
-.hover-button {
     font-weight: 700;
     font-size: 1.1rem;
     position: relative;
@@ -222,7 +168,12 @@ h1 {
     backdrop-filter: blur(20px);
     box-shadow: var(--shadow);
     overflow: hidden;
-    transition: color 0.4s ease;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease,
+        opacity 0.18s ease,
+        color 0.4s ease;
 }
 
 .hover-button::before {
@@ -245,48 +196,7 @@ h1 {
 
 .hover-button:hover {
     color: #051221;
-    transform: translateY(-2px);
-}
-
-
-.hover-button:hover,
-.answer-button:hover,
-.pixel:hover {
     transform: translateY(-1px);
-}
-
-.results-button {
-    flex: 1;
-    text-align: center;
-}
-
-.results-button * {
-    position: relative;
-    z-index: 2;
-}
-
-.hover-button.results-button:hover {
-    color: #051221 !important;
-}
-
-.state-results {
-    /* Card styling removed for cleaner results display */
-}
-
-.results-summary {
-    display: grid;
-    gap: 10px;
-    margin-top: 16px;
-}
-
-.result-line {
-    padding: 14px 16px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.result-line strong {
-    color: var(--cyan);
 }
 
 .stoplight-results {
@@ -296,22 +206,25 @@ h1 {
 }
 
 .hero-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     text-align: center;
 }
 
 .average-time {
     font-size: 3.5rem;
     font-weight: 700;
-    margin-bottom: 8px;
 }
 
-.reaction-age,
+.reaction-percentile,
 .reaction-description {
     color: var(--cyan);
     font-size: 1.1rem;
 }
 
-.rounds-grid {
+.rounds {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -344,7 +257,10 @@ h1 {
     margin-top: 18px;
 }
 
-/* Unified game panel for both games */
+.results-actions .hover-button {
+    flex: 1;
+}
+
 .game-panel {
     width: 100%;
     border-radius: 8px;
@@ -360,12 +276,10 @@ h1 {
     transition: transform 0.2s ease;
 }
 
-/* Entry state (both games) */
 .game-panel.entry {
     background: linear-gradient(160deg, rgba(92, 107, 115, 0.4), rgba(60, 70, 80, 0.85));
 }
 
-/* Stoplight-specific states */
 .game-panel.waiting {
     background: var(--wait-gray);
 }
@@ -381,18 +295,6 @@ h1 {
 .game-panel.early {
     background: var(--red);
     animation: shake 0.4s ease-in-out;
-}
-
-/* Whack-specific playing state */
-.game-panel.playing {
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(17, 47, 33, 0.95), rgba(9, 20, 16, 0.95));
-    background-size: 32px 32px, 32px 32px, auto;
-    cursor: default;
-    justify-content: flex-start;
-    padding-top: 24px;
 }
 
 @keyframes shake {
@@ -417,108 +319,6 @@ h1 {
     color: rgba(255, 255, 255, 0.88);
 }
 
-
-.pixel {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 24px rgba(16, 229, 117, 0.6);
-    cursor: pointer;
-    transition: none;
-}
-
-.pixel.hit {
-    animation: pop 300ms ease-out forwards;
-}
-
-@keyframes pop {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1.5); opacity: 0; }
-}
-
-.pixel.hit::before {
-    content: '';
-    position: absolute;
-    inset: -20px;
-    background: radial-gradient(circle, var(--green) 0%, transparent 70%);
-    animation: particle-burst 400ms ease-out;
-    pointer-events: none;
-}
-
-@keyframes particle-burst {
-    0% { transform: scale(0.5); opacity: 1; }
-    100% { transform: scale(2); opacity: 0; }
-}
-
-.penalty-toast {
-    position: absolute;
-    top: 20px;
-    left: 80%;
-    transform: translateX(-50%);
-    padding: 12px 20px;
-    background: rgba(255, 42, 85, 0.95);
-    border-radius: 8px;
-    color: white;
-    font-weight: 700;
-    animation: toast-slide 2s ease-out forwards;
-    pointer-events: none;
-    z-index: 100;
-}
-
-@keyframes toast-slide {
-    0% { transform: translate(-50%, -100%); opacity: 0; }
-    10% { transform: translate(-50%, 0); opacity: 1; }
-    90% { transform: translate(-50%, 0); opacity: 1; }
-    100% { transform: translate(-50%, -20px); opacity: 0; }
-}
-
-.whack-results {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.hit-count {
-    font-size: 3rem;
-    font-weight: 700;
-    text-align: center;
-}
-
-.skill-badge {
-    color: var(--cyan);
-    font-size: 1.2rem;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
-
-.stat-box {
-    padding: 16px;
-    background: rgba(16, 229, 117, 0.1);
-    border: 1px solid rgba(16, 229, 117, 0.3);
-    border-radius: 6px;
-    text-align: center;
-}
-
-.stat-label {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-}
-
-.stat-value {
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-
 .app-footer {
     text-align: center;
     font-size: 0.8rem;
@@ -530,36 +330,28 @@ h1 {
     color: var(--cyan);
 }
 
-/* Hide header/footer during gameplay (phase 2) */
 body.playing-mode .app-header,
 body.playing-mode .app-footer {
     display: none;
 }
 
-/* Make game section fill available space in phase 2 */
-body.playing-mode {
-    padding: 0;
-}
-
-/* Mobile only: fullscreen in playing mode */
 @media (max-width: 640px) {
     body.playing-mode .app-container {
         max-width: none;
         max-height: none;
         width: 100vw;
-        height: 100vh;    }
+        height: 100vh;
+    }
 }
 
-/* Desktop: keep container size, just fill it */
-body.playing-mode .centered,
-body.playing-mode main,
-body.playing-mode .state-playing {
+body.playing-mode .app-main,
+body.playing-mode #playing-state {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
-/* Desktop enhancements */
 @media (min-width: 641px) {
     .game-hud {
         height: 60px;
@@ -569,19 +361,7 @@ body.playing-mode .state-playing {
         font-size: 1rem;
     }
 
-    .average-time {
-        font-size: 3.5rem;
-    }
-
     .round-box {
         max-width: 200px;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .hit-count {
-        font-size: 4rem;
     }
 }
