@@ -41,10 +41,26 @@
 
             <section class="state hidden" id="results-state">
                 <div class="stoplight-results">
-                    <!-- TODO 1: Build hero-stats (div with average-time, reaction-percentile, reaction-description) -->
+                    <div class="hero-stats">
+                        <div class="average-time" id="average-time"></div>
+                        <p class="reaction-percentile" id="reaction-percentile"></p>
+                        <p class="reaction-description" id="reaction-description"></p>
+                    </div>
 
-                    <!-- TODO 2: Build rounds (div with 3 round-box divs, each containing round-label and round-time) -->
-
+                    <div class="rounds">
+                        <div class="round-box">
+                            <div class="round-label">Round 1</div>
+                            <div class="round-time" data-round-time></div>
+                        </div>
+                        <div class="round-box">
+                            <div class="round-label">Round 2</div>
+                            <div class="round-time" data-round-time></div>
+                        </div>
+                        <div class="round-box">
+                            <div class="round-label">Round 3</div>
+                            <div class="round-time" data-round-time></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="results-actions">

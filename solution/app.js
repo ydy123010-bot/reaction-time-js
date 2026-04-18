@@ -66,9 +66,11 @@ function getReactionDescription(average) {
  * Hint: Use a for loop to add up all the values, then divide by the length
  */
 function calculateAverage(times) {
-  // Your code here
-
-  return 0;
+  let sum = 0;
+  for (let i = 0; i < times.length; i++) {
+    sum += times[i];
+  }
+  return sum / times.length;
 }
 
 /**
@@ -79,9 +81,7 @@ function calculateAverage(times) {
  * Hint: Use performance.now() to get the current time, then subtract startTime
  */
 function getReactionTime(startTime) {
-  // Your code here
-
-  return 0;
+  return performance.now() - startTime;
 }
 
 /**
@@ -96,9 +96,18 @@ function getReactionTime(startTime) {
  * - roundTimeElements[0], [1], [2] .textContent = use formatMilliseconds for each time
  */
 function updateResultsDisplay(average, times) {
-  // Your code here
+  averageTime.textContent = formatMilliseconds(average);
+  reactionPercentile.textContent = `Faster than ${calculatePercentile(average)}% of people.`;
+  reactionDescription.textContent = getReactionDescription(average);
 
+  for (let i = 0; i < times.length; i++) {
+    roundTimeElements[i].textContent = formatMilliseconds(times[i]);
+  }
 }
+
+// ============================================================
+// GAME LOGIC (already done for you)
+// ============================================================
 
 function setPanel(className, phaseText, instructionText) {
   reactionPanel.className = `game-panel ${className}`;
@@ -176,7 +185,7 @@ tryAgainButton.addEventListener("click", showStartScreen);
 reactionPanel.addEventListener("click", handlePanelClick);
 
 shareButton.addEventListener("click", async () => {
-  const average = results.reduce((sum, time) => sum + time, 0) / results.length;
+  const average = calculateAverage(results);
   const percentile = calculatePercentile(average);
   const shareText = `My reaction time is ${formatMilliseconds(average)}. Faster than ${percentile}% of people! What's yours?`;
 

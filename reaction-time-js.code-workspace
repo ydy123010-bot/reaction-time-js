@@ -1,16 +1,23 @@
 {
-  "folders": [
-    {
-      "path": "."
-    }
-  ],
+  "folders": [{ "path": "." }],
   "settings": {
     "github.copilot.enable": {
       "*": false
     },
+    "github.copilot.editor.enableAutoCompletions": false,
     "github.copilot.chat.enabled": false,
     "chat.commandCenter.enabled": false,
     "chat.editor.enabled": false,
+
+    "editor.fontSize": 14,
+    "editor.lineNumbers": "on",
+    "editor.wordWrap": "on",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.renderWhitespace": "selection",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.minimap.enabled": false,
     "editor.inlineSuggest.enabled": false,
     "editor.quickSuggestions": {
       "other": false,
@@ -18,17 +25,20 @@
       "strings": false
     },
     "editor.suggestOnTriggerCharacters": false,
-    "editor.parameterHints.enabled": false,
+    "editor.acceptSuggestionOnCommitCharacter": false,
     "editor.wordBasedSuggestions": "off",
-    "editor.tabCompletion": "off",
+
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+
     "files.exclude": {
-      "**/.devcontainer": true,
-      "**/.gitignore": true,
-      "**/*.code-workspace": true,
-      "**/words.js": true,
-      "**/app.js": true,
-      "**/solutions": true,
-      "**/RULES.md": true
+      ".devcontainer": true,
+      ".gitignore": true,
+      ".claude": true,
+      "*.code-workspace": true,
+      "solution": true,
+      "INSTRUCTOR-NOTES.md": true,
+      "STARTER-PROJECT-SUMMARY.md": true
     }
   }
 }

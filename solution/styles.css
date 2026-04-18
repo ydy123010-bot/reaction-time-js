@@ -205,11 +205,13 @@ h1 {
     gap: 24px;
 }
 
-/* TODO 3: Style .hero-stats (flex column, centered, gap) */
-
-/* TODO 4: Style .rounds (flex row, gap) */
-
-/* TODO 5: Style .round-box (flex: 1, padding, background, border, border-radius) */
+.hero-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
 
 .average-time {
     font-size: 3.5rem;
@@ -220,6 +222,22 @@ h1 {
 .reaction-description {
     color: var(--cyan);
     font-size: 1.1rem;
+}
+
+.rounds {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.round-box {
+    flex: 1;
+    padding: 16px;
+    background: rgba(16, 229, 117, 0.1);
+    border: 1px solid rgba(16, 229, 117, 0.3);
+    border-radius: 6px;
+    text-align: center;
 }
 
 .round-label {
@@ -258,7 +276,26 @@ h1 {
     transition: transform 0.2s ease;
 }
 
-/* TODO 6: Style game panel states (.entry, .waiting, .ready, .result, .early) */
+.game-panel.entry {
+    background: linear-gradient(160deg, rgba(92, 107, 115, 0.4), rgba(60, 70, 80, 0.85));
+}
+
+.game-panel.waiting {
+    background: var(--wait-gray);
+}
+
+.game-panel.ready {
+    background: var(--green);
+}
+
+.game-panel.result {
+    background: linear-gradient(160deg, rgba(143, 232, 255, 0.22), rgba(23, 93, 132, 0.7));
+}
+
+.game-panel.early {
+    background: var(--red);
+    animation: shake 0.4s ease-in-out;
+}
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
