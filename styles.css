@@ -206,10 +206,29 @@ h1 {
 }
 
 /* TODO 3: Style .hero-stats (flex column, centered, gap) */
-
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
 /* TODO 4: Style .rounds (flex row, gap) */
-
+.round {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px; 
+  text-align: center;
+}
 /* TODO 5: Style .round-box (flex: 1, padding, background, border, border-radius) */
+.round-box {
+  padding: 16px;             
+  border: 1px;   
+  border-color: #00ffff;
+  border-style: solid;       
+  border-radius: 10px;    
+  flex: 1;    
+}
 
 .average-time {
     font-size: 3.5rem;
@@ -220,6 +239,7 @@ h1 {
 .reaction-description {
     color: var(--cyan);
     font-size: 1.1rem;
+    text-align: center;
 }
 
 .round-label {
@@ -260,6 +280,25 @@ h1 {
 
 /* TODO 6: Style game panel states (.entry, .waiting, .ready, .result, .early) */
 
+.game-panel.entry {
+  background: #5f8dff;
+}
+
+.game-panel.waiting {
+  background: #5C6B73;
+}
+
+.game-panel.ready {
+  background: #10E575;
+}
+
+.game-panel.result {
+  background: #233a5b;
+}
+
+.game-panel.early {
+  background: #FF2A55;
+}
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-10px); }

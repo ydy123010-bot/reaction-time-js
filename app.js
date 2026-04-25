@@ -1,6 +1,6 @@
 const TOTAL_ROUNDS = 3;
-const WAIT_MIN_MS = 2000;
-const WAIT_RANDOM_MS = 1750;
+const WAIT_MIN_MS = 10;
+const WAIT_RANDOM_MS = 10;
 
 const startScreen = document.getElementById("test-selection");
 const playingState = document.getElementById("playing-state");
@@ -66,9 +66,11 @@ function getReactionDescription(average) {
  * Hint: Use a for loop to add up all the values, then divide by the length
  */
 function calculateAverage(times) {
-  // Your code here
-
-  return 0;
+  let sum = 0;
+  for (let i = 0; i < times.length; i++) {
+    sum += times[i];
+  }
+  return sum / times.length;
 }
 
 /**
@@ -79,9 +81,7 @@ function calculateAverage(times) {
  * Hint: Use performance.now() to get the current time, then subtract startTime
  */
 function getReactionTime(startTime) {
-  // Your code here
-
-  return 0;
+  return performance.now() - startTime;
 }
 
 /**
@@ -96,8 +96,16 @@ function getReactionTime(startTime) {
  * - roundTimeElements[0], [1], [2] .textContent = use formatMilliseconds for each time
  */
 function updateResultsDisplay(average, times) {
-  // Your code here
+  console.log(roundTimeElements);
+  averageTime.textContent = formatMilliseconds(average);
+  
+  reactionPercentile.textContent = "faster than " + calculatePercentile(average) + "% of people";
 
+  reactionDescription.textContent = getReactionDescription(average);
+
+  for(let i = 0; i < roundTimeElements.length; i++){
+    roundTimeElements[i].textContent = formatMilliseconds(times[i]);
+  }
 }
 
 function setPanel(className, phaseText, instructionText) {
